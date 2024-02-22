@@ -2,7 +2,7 @@ import unittest
 
 from airflow.exceptions import AirflowSkipException
 
-from test.utils import get_dag, get_context_mocks, TASK_1, TASK_2, TASK_3, get_tasks, get_tasks_and_contexts
+from test.helper import get_dag, get_context_mocks, TASK_1, TASK_2, TASK_3, get_tasks, get_tasks_and_contexts
 from utils.tasks_utils import TASK_NOT_IN_INPUT_MESSAGE, TASKS_FIELD_NOT_A_LIST_MESSAGE, MISSING_TASK_FIELD_MESSAGE
 
 
