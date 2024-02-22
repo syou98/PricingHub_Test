@@ -2,20 +2,20 @@ from airflow import DAG
 from airflow.exceptions import AirflowSkipException
 from airflow.operators.python import PythonOperator
 
-TASK_NOT_IN_INPUT_MESSAGE = "it is not in triggered tasks"
-MISSING_TASK_FIELD_MESSAGE = "input configuration 'tasks' is missing"
-TASKS_FIELD_NOT_A_LIST_MESSAGE = "input configuration 'tasks' is not a list"
+TASK_NOT_IN_INPUT_MESSAGE = "it is not part of the tasks to be triggered"
+MISSING_TASK_FIELD_MESSAGE = "input configuration field 'tasks' is missing"
+TASKS_FIELD_NOT_A_LIST_MESSAGE = "input configuration field 'tasks' is not a list"
 
 
-def raise_skip_exception(task_id: str, error: str = None) -> None:
+def raise_skip_exception(task_id: str, message: str = None) -> None:
     """
     Raises an exception to skip a task in the DAG.
 
     :param task_id: The ID of the task to be skipped.
-    :param error: Optional reason for skipping the task. Uses a default message if not provided.
+    :param message: Optional reason for skipping the task. Uses a default message if not provided.
     :return: None.
     """
-    exception_message = f"{task_id} skipped : {error if error else TASK_NOT_IN_INPUT_MESSAGE}."
+    exception_message = f"{task_id} skipped : {message if message else TASK_NOT_IN_INPUT_MESSAGE}."
     raise AirflowSkipException(exception_message)
 
 
@@ -36,9 +36,9 @@ def my_task(**kwargs) -> None:
         else:
             raise_skip_exception(task_id=task_id)
     except KeyError:
-        raise_skip_exception(task_id=task_id, error=MISSING_TASK_FIELD_MESSAGE)
+        raise_skip_exception(task_id=task_id, message=MISSING_TASK_FIELD_MESSAGE)
     except AssertionError:
-        raise_skip_exception(task_id=task_id, error=TASKS_FIELD_NOT_A_LIST_MESSAGE)
+        raise_skip_exception(task_id=task_id, message=TASKS_FIELD_NOT_A_LIST_MESSAGE)
 
 
 def get_task_operator(dag: DAG, task_number: int) -> PythonOperator:
